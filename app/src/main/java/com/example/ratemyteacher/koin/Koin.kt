@@ -6,6 +6,8 @@ import com.example.ratemyteacher.ui.main.MainContract
 import com.example.ratemyteacher.ui.main.MainPresenter
 import com.example.ratemyteacher.ui.rateteacher.RateTeacherContract
 import com.example.ratemyteacher.ui.rateteacher.RateTeacherPresenter
+import com.example.ratemyteacher.ui.reviewslist.ReviewsListContract
+import com.example.ratemyteacher.ui.reviewslist.ReviewsListPresenter
 import com.example.ratemyteacher.ui.splash.SplashContract
 import com.example.ratemyteacher.ui.splash.SplashPresenter
 import com.example.ratemyteacher.ui.teacherslist.TeachersListContract
@@ -23,4 +25,5 @@ val uiModule = module {
     factory { (view: MainContract.View) -> MainPresenter(view) as MainContract.Presenter }
     factory { (view: RateTeacherContract.View) -> RateTeacherPresenter(view) as RateTeacherContract.Presenter }
     factory { (view: TeachersListContract.View) -> TeachersListPresenter(view) as TeachersListContract.Presenter }
+    factory { (view: ReviewsListContract.View) -> ReviewsListPresenter(view) as ReviewsListContract.Presenter }
 }

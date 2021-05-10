@@ -20,10 +20,20 @@
         android:id="@+id/openTeachersListButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open  Teachers List"
+        android:text="Open Teachers List"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/openRateButton" />
+
+    <Button
+        android:id="@+id/openReviewsListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Reviews List"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/openTeachersListButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

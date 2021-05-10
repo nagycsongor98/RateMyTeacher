@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RateMyTeacher">
         <activity
+            android:name=".ui.reviewslist.ReviewsListActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.teacherslist.TeachersListActivity"
             android:screenOrientation="portrait" />
         <activity
