@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.example.ratemyteacher.R
 import com.example.ratemyteacher.databinding.ActivityMainBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
+import com.example.ratemyteacher.ui.profile.ProfileActivity
 import com.example.ratemyteacher.ui.rateteacher.RateTeacherActivity
 import com.example.ratemyteacher.ui.reviewslist.ReviewsListActivity
 import com.example.ratemyteacher.ui.teacherslist.TeachersListActivity
@@ -31,6 +32,10 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View{
 
         binding.openReviewsListButton.setOnClickListener {
             startActivity(Intent(this, ReviewsListActivity::class.java))
+        }
+
+        binding.openProfileButton.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 }
