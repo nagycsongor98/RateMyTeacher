@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RateMyTeacher">
         <activity
+            android:name=".ui.login.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.splash.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
