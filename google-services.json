@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "905545875552",
+    "project_id": "ratemyteacher-5ec09",
+    "storage_bucket": "ratemyteacher-5ec09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905545875552:android:fd6cecefdb806dff5e8305",
+        "android_client_info": {
+          "package_name": "com.example.ratemyteacher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905545875552-sfvjt787a644fjcvfmmvmjp0ov42mcl8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1uJCCMQHf5Tm0Skye-BoHONfYRmw7wMI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905545875552-sfvjt787a644fjcvfmmvmjp0ov42mcl8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
