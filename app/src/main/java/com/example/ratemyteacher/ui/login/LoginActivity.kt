@@ -38,6 +38,7 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
             signInExistingUser(email,password)
         }
 
+
         binding.signUpButton.setOnClickListener{
             if (checkIfEmailMatches(email) && checkIfPasswordsMatch(password,reEnteredPassword)) {
                 signUpUser(email,password)
