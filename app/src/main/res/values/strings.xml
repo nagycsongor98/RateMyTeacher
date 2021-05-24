@@ -2,10 +2,9 @@
     <string name="app_name">RateMyTeacher</string>
     <string-array name="Categories">
         <item>Informatics</item>
-        <item>Computer Science</item>
-        <item>Automatisation</item>
-        <item>Mobile Communication</item>
-        <item>Software developement</item>
+        <item>Communications and PR</item>
+        <item>Mechanical engineering</item>
+        <item>Horticultural engineering</item>
     </string-array>
 
     <string-array name="Teachers">

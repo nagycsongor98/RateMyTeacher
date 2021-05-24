@@ -2,21 +2,17 @@ package com.example.ratemyteacher.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import com.example.ratemyteacher.R
-import com.example.ratemyteacher.UserPreference
 import com.example.ratemyteacher.databinding.ActivityProfileBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
 import com.example.ratemyteacher.ui.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
-import org.koin.android.ext.android.bind
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import java.util.*
 
 class ProfileActivity : BaseActivity<ProfileContract.Presenter>(), ProfileContract.View{
 
@@ -43,13 +39,12 @@ class ProfileActivity : BaseActivity<ProfileContract.Presenter>(), ProfileContra
 
     fun saveUser(){
         database = FirebaseDatabase.getInstance().reference
-        var reference =  database.child("App").child("Users")
+        var currentUser = FirebaseAuth.getInstance().currentUser!!.uid
+        var reference =  database.child("App").child("Users").child(currentUser)
         var str = binding.profileNameText.text.toString()
-        reference.child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(str)
-
-    }
-
-    data class User(val username: String? = null, val email: String? = null) {
+        reference.child("Username").setValue(str)
+        val text = binding.categorySpinner.selectedItem.toString()
+        reference.child("Department").setValue(text)
 
     }
 
@@ -61,10 +56,22 @@ class ProfileActivity : BaseActivity<ProfileContract.Presenter>(), ProfileContra
 
         val user = FirebaseAuth.getInstance().currentUser
         user?.let {
+
+            val categories = resources.getStringArray(R.array.Categories)
+            val spinner = binding.categorySpinner
+            if (spinner != null) {
+                val adapter = ArrayAdapter(
+                    this,
+                    R.layout.support_simple_spinner_dropdown_item, categories
+                )
+                spinner.adapter = adapter
+            }
+
             email = user.email.toString()
             binding.textViewEmail.text = "You're email is: " + email
             database = FirebaseDatabase.getInstance().reference
-            var reference = database.child("App").child("Users")
+            var currentUser = FirebaseAuth.getInstance().currentUser!!.uid
+            var reference = database.child("App").child("Users").child(currentUser)
 
             reference.addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -74,8 +81,12 @@ class ProfileActivity : BaseActivity<ProfileContract.Presenter>(), ProfileContra
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (ds in snapshot.children) {
-                        if (ds.key == FirebaseAuth.getInstance().currentUser!!.uid)
+                        if (ds.key == "Username")
                             binding.profileNameText.setText(ds.value.toString())
+                        if (ds.key == "Department"){
+                            var index = categories.indexOf(ds.value)
+                            binding.categorySpinner.setSelection(index)
+                        }
 
                         Log.d("Response", reference.toString())
                     }
@@ -84,14 +95,6 @@ class ProfileActivity : BaseActivity<ProfileContract.Presenter>(), ProfileContra
         }
 
 
-        val categories = resources.getStringArray(R.array.Categories)
-        val spinner = binding.categorySpinner
-        if (spinner != null) {
-            val adapter = ArrayAdapter(
-                this,
-                R.layout.support_simple_spinner_dropdown_item, categories
-            )
-            spinner.adapter = adapter
-        }
+
     }
 }
