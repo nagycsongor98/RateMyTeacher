@@ -1,20 +1,22 @@
 package com.example.ratemyteacher.ui.rateteacher
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.ratemyteacher.R
-import com.example.ratemyteacher.databinding.ActivityMainBinding
 import com.example.ratemyteacher.databinding.ActivityReatTeacherBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
-import com.example.ratemyteacher.ui.main.MainContract
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
-import org.koin.android.ext.android.bind
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class RateTeacherActivity : BaseActivity<RateTeacherContract.Presenter>(), RateTeacherContract.View{
 
@@ -27,35 +29,117 @@ class RateTeacherActivity : BaseActivity<RateTeacherContract.Presenter>(), RateT
         binding = ActivityReatTeacherBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val categories = resources.getStringArray(R.array.Categories)
-        val spinner = binding.departmentSpinner
-        if (spinner != null) {
-            val adapter = ArrayAdapter(
-                this,
-                R.layout.support_simple_spinner_dropdown_item, categories
-            )
-            spinner.adapter = adapter
-        }
 
-        val teachers = resources.getStringArray(R.array.Teachers)
-        val spinnerTeachers = binding.teacherSpinner
-        if (spinnerTeachers != null) {
-            val adapter = ArrayAdapter(
-                this,
-                R.layout.support_simple_spinner_dropdown_item, teachers
-            )
-            spinnerTeachers.adapter = adapter
-        }
 
+
+        database = FirebaseDatabase.getInstance().reference
+        var reference = database.child("App").child("Teachers").child("Departments")
+
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Response", error.message)
+
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var categories: ArrayList<String> = ArrayList()
+                var teachers: ArrayList<String> = ArrayList()
+
+                categories.add("All")
+
+                for (ds in snapshot.children) {
+                    categories.add(ds.key.toString())
+                    for (child in ds.children) {
+                        teachers.add(child.value.toString())
+                    }
+
+                }
+                if (categories.size == 0) {
+                    categories = ArrayList<String>(Arrays.asList(*resources.getStringArray(R.array.Categories)))
+                }
+                val spinner = binding.departmentSpinner
+                if (spinner != null) {
+                    val adapter = ArrayAdapter(
+                        this@RateTeacherActivity,
+                        R.layout.support_simple_spinner_dropdown_item, categories
+                    )
+                    spinner.adapter = adapter
+                }
+
+                val spinnerTeachers = binding.teacherSpinner
+                if (spinnerTeachers != null) {
+                    val adapter = ArrayAdapter(
+                        this@RateTeacherActivity,
+                        R.layout.support_simple_spinner_dropdown_item, teachers
+                    )
+                    spinnerTeachers.adapter = adapter
+                }
+            }
+        })
+
+        @IgnoreExtraProperties
+        data class Review(val reviewerEmail: String? = null, val reviewedTeacher: String? = null, val reviewedDepartment: String? = null, val reviewString: String? = null) {
+            // Null default values create a no-argument default constructor, which is needed
+            // for deserialization from a DataSnapshot.
+        }
         binding.saveReviewButton.setOnClickListener {
             if (!binding.reviewTextField.text.isNullOrEmpty()) {
                 Toast.makeText(applicationContext, "Saved", Toast.LENGTH_SHORT)
                     .show()
                 database = FirebaseDatabase.getInstance().reference
-                database.child("App").child("Teachers").child(spinnerTeachers.selectedItem.toString()).child("Reviews").push().setValue(binding.reviewTextField.text.toString())
+                var currentUser = FirebaseAuth.getInstance().currentUser!!.email
+
+                database.child("App").child("Reviews").push().setValue(Review(currentUser,binding.teacherSpinner.selectedItem.toString(),binding.departmentSpinner.selectedItem.toString(),binding.reviewTextField.text.toString()))
             } else {
                 Toast.makeText(applicationContext, "Please complete the review field !", Toast.LENGTH_SHORT)
                     .show()
+            }
+        }
+
+        binding.departmentSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>?,
+                view: View?,
+                i: Int,
+                l: Long
+            ) {
+                reference.addValueEventListener(object : ValueEventListener {
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d("Response", error.message)
+
+                    }
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        var teachers: ArrayList<String> = ArrayList()
+                        var selectedItem = binding.departmentSpinner.selectedItem.toString()
+
+
+                        for (ds in snapshot.children) {
+                            for (child in ds.children) {
+                                if (selectedItem != "All") {
+                                    if (ds.key == binding.departmentSpinner.selectedItem.toString()) {
+                                        teachers.add(child.value.toString())
+                                    }
+                                } else {
+                                    teachers.add(child.value.toString())
+                                }
+                            }
+                        }
+                        val spinnerTeachers = binding.teacherSpinner
+                        if (spinnerTeachers != null) {
+                            val adapter = ArrayAdapter(
+                                this@RateTeacherActivity,
+                                R.layout.support_simple_spinner_dropdown_item, teachers
+                            )
+                            spinnerTeachers.adapter = adapter
+                        }
+                    }
+                })
+
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                return
             }
         }
     }
