@@ -9,10 +9,18 @@ import com.example.ratemyteacher.mvp.BaseView
  */
 class ProfileContract {
     interface View : BaseView {
+        fun setupProfileCategories(categories: Array<String>)
 
+        fun setupProfileSelectedCategory(index: Int)
+
+        fun setupProfileEmail(email: String)
+
+        fun setupProfileName(name: String)
     }
 
     abstract class Presenter(view: View?) : BasePresenter<View>(view) {
-
+        abstract fun saveUser(profileNameText: String, categorySpinner:String) 
+        
+        abstract fun loadDataFromFirebase(categories: Array<String>)
     }
 }
