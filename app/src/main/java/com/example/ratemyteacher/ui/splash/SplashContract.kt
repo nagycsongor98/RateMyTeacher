@@ -9,10 +9,10 @@ import com.example.ratemyteacher.mvp.BaseView
  */
 class SplashContract {
     interface View : BaseView {
-
+        fun startApplication()
     }
 
     abstract class Presenter(view: View?) : BasePresenter<View>(view) {
-
+        abstract fun startCounter()
     }
 }

@@ -2,7 +2,6 @@ package com.example.ratemyteacher.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
-import com.example.ratemyteacher.R
 import com.example.ratemyteacher.databinding.ActivitySplashBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
 import com.example.ratemyteacher.ui.login.LoginActivity
@@ -19,9 +18,11 @@ class SplashActivity : BaseActivity<SplashContract.Presenter>(), SplashContract.
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.button.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+        presenter.startCounter()
+    }
+
+    override fun startApplication() {
+        startActivity(Intent(this, LoginActivity::class.java))
             finish()
-        }
     }
 }
