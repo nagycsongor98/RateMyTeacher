@@ -62,8 +62,11 @@
         app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reviewsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
         app:layout_constraintBottom_toTopOf="@+id/navBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -71,6 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/teacherSpinnerReview" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/navBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent">

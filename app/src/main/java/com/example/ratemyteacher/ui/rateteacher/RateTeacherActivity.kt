@@ -93,20 +93,14 @@ class RateTeacherActivity : BaseActivity<RateTeacherContract.Presenter>(), RateT
                 }
             }
         })
-
-        @IgnoreExtraProperties
-        data class Review(val reviewerEmail: String? = null, val reviewedTeacher: String? = null, val reviewedDepartment: String? = null, val reviewString: String? = null) {
-            // Null default values create a no-argument default constructor, which is needed
-            // for deserialization from a DataSnapshot.
-        }
         binding.saveReviewButton.setOnClickListener {
             if (!binding.reviewTextField.text.isNullOrEmpty()) {
                 Toast.makeText(applicationContext, "Saved", Toast.LENGTH_SHORT)
                     .show()
                 database = FirebaseDatabase.getInstance().reference
-                var currentUser = FirebaseAuth.getInstance().currentUser!!.email
+                val currentUser = FirebaseAuth.getInstance().currentUser?.email?:""
 
-                database.child("App").child("Reviews").push().setValue(Review(currentUser,binding.teacherSpinner.selectedItem.toString(),binding.departmentSpinner.selectedItem.toString(),binding.reviewTextField.text.toString()))
+                database.child("App").child("Reviews").child(binding.teacherSpinner.selectedItem.hashCode().toString()).push().setValue(Review(currentUser,binding.teacherSpinner.selectedItem.toString(),binding.departmentSpinner.selectedItem.toString(),binding.reviewTextField.text.toString()))
             } else {
                 Toast.makeText(applicationContext, "Please complete the review field !", Toast.LENGTH_SHORT)
                     .show()

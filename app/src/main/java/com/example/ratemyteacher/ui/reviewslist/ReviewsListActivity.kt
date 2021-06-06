@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ratemyteacher.R
 import com.example.ratemyteacher.databinding.ActivityReviewsListBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
 import com.example.ratemyteacher.ui.profile.ProfileActivity
 import com.example.ratemyteacher.ui.rateteacher.RateTeacherActivity
+import com.example.ratemyteacher.ui.rateteacher.Review
 import com.example.ratemyteacher.ui.teacherslist.TeachersListActivity
 import com.google.firebase.database.*
 import org.koin.android.ext.android.inject
@@ -22,8 +24,6 @@ class ReviewsListActivity : BaseActivity<ReviewsListContract.Presenter>(), Revie
 
     override val presenter: ReviewsListContract.Presenter? by inject { parametersOf(this) }
     private lateinit var binding: ActivityReviewsListBinding
-    private lateinit var database: DatabaseReference
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,50 +45,7 @@ class ReviewsListActivity : BaseActivity<ReviewsListContract.Presenter>(), Revie
             finish()
         }
 
-        database = FirebaseDatabase.getInstance().reference
-        var reference = database.child("App").child("Teachers").child("Departments")
-
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("Response", error.message)
-
-            }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                var categories: ArrayList<String> = ArrayList()
-                var teachers: ArrayList<String> = ArrayList()
-
-                categories.add("All")
-
-                for (ds in snapshot.children) {
-                    categories.add(ds.key.toString())
-                    for (child in ds.children) {
-                        teachers.add(child.value.toString())
-                    }
-
-                }
-                if (categories.size == 0) {
-                    categories = ArrayList<String>(Arrays.asList(*resources.getStringArray(R.array.Categories)))
-                }
-                val spinner = binding.departmentSpinnerReview
-                if (spinner != null) {
-                    val adapter = ArrayAdapter(
-                        this@ReviewsListActivity,
-                        R.layout.support_simple_spinner_dropdown_item, categories
-                    )
-                    spinner.adapter = adapter
-                }
-
-                val spinnerTeachers = binding.teacherSpinnerReview
-                if (spinnerTeachers != null) {
-                    val adapter = ArrayAdapter(
-                        this@ReviewsListActivity,
-                        R.layout.support_simple_spinner_dropdown_item, teachers
-                    )
-                    spinnerTeachers.adapter = adapter
-                }
-            }
-        })
+        presenter?.getCategories()
 
         binding.departmentSpinnerReview.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -98,44 +55,59 @@ class ReviewsListActivity : BaseActivity<ReviewsListContract.Presenter>(), Revie
                 i: Int,
                 l: Long
             ) {
-                reference.addValueEventListener(object : ValueEventListener {
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.d("Response", error.message)
-
-                    }
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        var teachers: ArrayList<String> = ArrayList()
-                        var selectedItem = binding.departmentSpinnerReview.selectedItem.toString()
-
-
-                        for (ds in snapshot.children) {
-                            for (child in ds.children) {
-                                if (selectedItem != "All") {
-                                    if (ds.key == binding.departmentSpinnerReview.selectedItem.toString()) {
-                                        teachers.add(child.value.toString())
-                                    }
-                                } else {
-                                    teachers.add(child.value.toString())
-                                }
-                            }
-                        }
-                        val spinnerTeachers = binding.teacherSpinnerReview
-                        if (spinnerTeachers != null) {
-                            val adapter = ArrayAdapter(
-                                this@ReviewsListActivity,
-                                R.layout.support_simple_spinner_dropdown_item, teachers
-                            )
-                            spinnerTeachers.adapter = adapter
-                        }
-                    }
-                })
-
+                presenter?.getTeachers()
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {
                 return
             }
         }
+
+        binding.teacherSpinnerReview.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>?,
+                view: View?,
+                i: Int,
+                l: Long
+            ) {
+                presenter?.getReviews(binding.teacherSpinnerReview.selectedItem.toString())
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                return
+            }
+        }
+    }
+
+    override fun getSelectedDepartment(): String {
+        return  binding.departmentSpinnerReview.selectedItem.toString()
+    }
+
+    override fun setUpTeacherSpinner(teachers: ArrayList<String>) {
+        val adapter = ArrayAdapter(
+            this@ReviewsListActivity,
+            R.layout.support_simple_spinner_dropdown_item, teachers
+        )
+        binding.teacherSpinnerReview.adapter = adapter
+    }
+
+    override fun setupDepartmentSpinner(categories: ArrayList<String>) {
+        var mCategories = categories
+        if (mCategories.size == 0) {
+            mCategories = ArrayList(listOf(*resources.getStringArray(R.array.Categories)))
+        }
+        val adapter = ArrayAdapter(
+            this@ReviewsListActivity,
+            R.layout.support_simple_spinner_dropdown_item, mCategories
+        )
+        binding.departmentSpinnerReview.adapter = adapter
+    }
+
+    override fun showReviews(reviews: ArrayList<Review>) {
+        binding.reviewsRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.reviewsRecyclerView.adapter =
+            ReviewAdapter(reviews)
     }
 }
