@@ -1,6 +1,5 @@
 package com.example.ratemyteacher.ui.rateteacher
 
-import com.example.ratemyteacher.ui.main.MainContract
 import org.koin.core.KoinComponent
 
 /**

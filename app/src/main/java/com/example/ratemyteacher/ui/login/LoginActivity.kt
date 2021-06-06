@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.example.ratemyteacher.databinding.ActivityLoginBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
-import com.example.ratemyteacher.ui.main.MainActivity
+import com.example.ratemyteacher.ui.rateteacher.RateTeacherActivity
 import com.example.ratemyteacher.ui.signup.SignUpActivity
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -35,7 +35,7 @@ class LoginActivity : BaseActivity<LoginContract.Presenter>(), LoginContract.Vie
     }
 
     override fun startMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, RateTeacherActivity::class.java))
         finish()
     }
 

@@ -2,8 +2,6 @@ package com.example.ratemyteacher.koin
 
 import com.example.ratemyteacher.ui.login.LoginContract
 import com.example.ratemyteacher.ui.login.LoginPresenter
-import com.example.ratemyteacher.ui.main.MainContract
-import com.example.ratemyteacher.ui.main.MainPresenter
 import com.example.ratemyteacher.ui.profile.ProfileContract
 import com.example.ratemyteacher.ui.profile.ProfilePresenter
 import com.example.ratemyteacher.ui.rateteacher.RateTeacherContract
@@ -27,7 +25,6 @@ val uiModule = module {
     factory { (view: SplashContract.View) -> SplashPresenter(view) as SplashContract.Presenter }
     factory { (view: LoginContract.View) -> LoginPresenter(view) as LoginContract.Presenter }
     factory { (view: SignUpContract.View) -> SignUpPresenter(view) as SignUpContract.Presenter }
-    factory { (view: MainContract.View) -> MainPresenter(view) as MainContract.Presenter }
     factory { (view: RateTeacherContract.View) -> RateTeacherPresenter(view) as RateTeacherContract.Presenter }
     factory { (view: TeachersListContract.View) -> TeachersListPresenter(view) as TeachersListContract.Presenter }
     factory { (view: ReviewsListContract.View) -> ReviewsListPresenter(view) as ReviewsListContract.Presenter }

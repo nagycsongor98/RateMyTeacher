@@ -1,5 +1,6 @@
 package com.example.ratemyteacher.ui.rateteacher
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +11,9 @@ import android.widget.Toast
 import com.example.ratemyteacher.R
 import com.example.ratemyteacher.databinding.ActivityReatTeacherBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
+import com.example.ratemyteacher.ui.profile.ProfileActivity
+import com.example.ratemyteacher.ui.reviewslist.ReviewsListActivity
+import com.example.ratemyteacher.ui.teacherslist.TeachersListActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.koin.android.ext.android.inject
@@ -29,7 +33,20 @@ class RateTeacherActivity : BaseActivity<RateTeacherContract.Presenter>(), RateT
         binding = ActivityReatTeacherBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.teachersImageView.setOnClickListener {
+            startActivity(Intent(this,TeachersListActivity::class.java))
+            finish()
+        }
 
+        binding.reviewsImageView.setOnClickListener {
+            startActivity(Intent(this,ReviewsListActivity::class.java))
+            finish()
+        }
+
+        binding.profileImageView.setOnClickListener {
+            startActivity(Intent(this,ProfileActivity::class.java))
+            finish()
+        }
 
 
         database = FirebaseDatabase.getInstance().reference

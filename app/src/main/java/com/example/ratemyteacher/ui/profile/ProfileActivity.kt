@@ -7,7 +7,9 @@ import android.widget.ArrayAdapter
 import com.example.ratemyteacher.R
 import com.example.ratemyteacher.databinding.ActivityProfileBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
-import com.example.ratemyteacher.ui.main.MainActivity
+import com.example.ratemyteacher.ui.rateteacher.RateTeacherActivity
+import com.example.ratemyteacher.ui.reviewslist.ReviewsListActivity
+import com.example.ratemyteacher.ui.teacherslist.TeachersListActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.koin.android.ext.android.inject
@@ -25,6 +27,21 @@ class ProfileActivity : BaseActivity<ProfileContract.Presenter>(), ProfileContra
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.rateImageView.setOnClickListener {
+            startActivity(Intent(this, RateTeacherActivity::class.java))
+            finish()
+        }
+
+        binding.teachersImageView.setOnClickListener {
+            startActivity(Intent(this, TeachersListActivity::class.java))
+            finish()
+        }
+
+        binding.reviewsImageView.setOnClickListener {
+            startActivity(Intent(this, ReviewsListActivity::class.java))
+            finish()
+        }
 
         loadDataFromFirebase()
 
@@ -49,7 +66,7 @@ class ProfileActivity : BaseActivity<ProfileContract.Presenter>(), ProfileContra
     }
 
     fun navigateBack(){
-        startActivity(Intent(this, MainActivity::class.java))
+//        startActivity(Intent(this, MainActivity::class.java))
     }
 
     fun loadDataFromFirebase() {

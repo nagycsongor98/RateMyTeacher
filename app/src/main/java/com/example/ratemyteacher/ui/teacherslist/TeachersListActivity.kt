@@ -1,11 +1,15 @@
 package com.example.ratemyteacher.ui.teacherslist
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import com.example.ratemyteacher.R
 import com.example.ratemyteacher.databinding.ActivityTeachersListBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
+import com.example.ratemyteacher.ui.profile.ProfileActivity
+import com.example.ratemyteacher.ui.rateteacher.RateTeacherActivity
+import com.example.ratemyteacher.ui.reviewslist.ReviewsListActivity
 import com.google.firebase.database.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -22,6 +26,21 @@ class TeachersListActivity : BaseActivity<TeachersListContract.Presenter>(), Tea
         super.onCreate(savedInstanceState)
         binding = ActivityTeachersListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.rateImageView.setOnClickListener {
+            startActivity(Intent(this,RateTeacherActivity::class.java))
+            finish()
+        }
+
+        binding.reviewsImageView.setOnClickListener {
+            startActivity(Intent(this, ReviewsListActivity::class.java))
+            finish()
+        }
+
+        binding.profileImageView.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+            finish()
+        }
 
         database = FirebaseDatabase.getInstance().reference
         var reference = database.child("App").child("Teachers").child("Departments")
