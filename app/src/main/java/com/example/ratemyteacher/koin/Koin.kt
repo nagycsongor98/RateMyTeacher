@@ -10,6 +10,8 @@ import com.example.ratemyteacher.ui.rateteacher.RateTeacherContract
 import com.example.ratemyteacher.ui.rateteacher.RateTeacherPresenter
 import com.example.ratemyteacher.ui.reviewslist.ReviewsListContract
 import com.example.ratemyteacher.ui.reviewslist.ReviewsListPresenter
+import com.example.ratemyteacher.ui.signup.SignUpContract
+import com.example.ratemyteacher.ui.signup.SignUpPresenter
 import com.example.ratemyteacher.ui.splash.SplashContract
 import com.example.ratemyteacher.ui.splash.SplashPresenter
 import com.example.ratemyteacher.ui.teacherslist.TeachersListContract
@@ -24,6 +26,7 @@ import org.koin.dsl.module
 val uiModule = module {
     factory { (view: SplashContract.View) -> SplashPresenter(view) as SplashContract.Presenter }
     factory { (view: LoginContract.View) -> LoginPresenter(view) as LoginContract.Presenter }
+    factory { (view: SignUpContract.View) -> SignUpPresenter(view) as SignUpContract.Presenter }
     factory { (view: MainContract.View) -> MainPresenter(view) as MainContract.Presenter }
     factory { (view: RateTeacherContract.View) -> RateTeacherPresenter(view) as RateTeacherContract.Presenter }
     factory { (view: TeachersListContract.View) -> TeachersListPresenter(view) as TeachersListContract.Presenter }

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">RateMyTeacher</string>
     <string name="ratemyteacher">RateMyTeacher</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? <b>Sign up</b></string>
+    <string name="do_you_have_an_account_login">Do ypu have an account? <b>Login</b></string>
     <string-array name="Categories">
         <item>Informatics</item>
         <item>Communications and PR</item>
