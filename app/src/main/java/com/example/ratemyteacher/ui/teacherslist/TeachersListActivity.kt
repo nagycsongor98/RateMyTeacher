@@ -1,9 +1,13 @@
 package com.example.ratemyteacher.ui.teacherslist
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ratemyteacher.R
 import com.example.ratemyteacher.databinding.ActivityTeachersListBinding
 import com.example.ratemyteacher.ui.base.BaseActivity
@@ -16,11 +20,11 @@ import org.koin.core.parameter.parametersOf
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TeachersListActivity : BaseActivity<TeachersListContract.Presenter>(), TeachersListContract.View{
+class TeachersListActivity : BaseActivity<TeachersListContract.Presenter>(),
+    TeachersListContract.View {
 
     override val presenter: TeachersListContract.Presenter? by inject { parametersOf(this) }
     private lateinit var binding: ActivityTeachersListBinding
-    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +32,7 @@ class TeachersListActivity : BaseActivity<TeachersListContract.Presenter>(), Tea
         setContentView(binding.root)
 
         binding.rateImageView.setOnClickListener {
-            startActivity(Intent(this,RateTeacherActivity::class.java))
+            startActivity(Intent(this, RateTeacherActivity::class.java))
             finish()
         }
 
@@ -42,34 +46,57 @@ class TeachersListActivity : BaseActivity<TeachersListContract.Presenter>(), Tea
             finish()
         }
 
-        database = FirebaseDatabase.getInstance().reference
-        var reference = database.child("App").child("Teachers").child("Departments")
+        presenter?.getDepartments()
 
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("Response", error.message)
-
+        binding.departmentSpinnerTeacherList.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                presenter?.getTeachers(binding.departmentSpinnerTeacherList.selectedItem.toString())
             }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                var categories: ArrayList<String> = ArrayList()
-
-                for (ds in snapshot.children) {
-                    categories.add(ds.key.toString())
-                }
-                if (categories.size == 0) {
-                    categories = ArrayList<String>(Arrays.asList(*resources.getStringArray(R.array.Categories)))
-                }
-                val spinner = binding.departmentSpinnerTeacherList
-                if (spinner != null) {
-                    val adapter = ArrayAdapter(
-                        this@TeachersListActivity,
-                        R.layout.support_simple_spinner_dropdown_item, categories
-                    )
-                    spinner.adapter = adapter
-                }
-
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Log.d("Response", "onNothingSelected")
             }
-        })
+
+        }
+    }
+
+    override fun showDepartments(categories: ArrayList<String>) {
+        var mCategories = categories
+        if (mCategories.size == 0) {
+            mCategories =
+                ArrayList(listOf(*resources.getStringArray(R.array.Categories)))
+        }
+        val adapter = ArrayAdapter(
+            this@TeachersListActivity,
+            R.layout.support_simple_spinner_dropdown_item, mCategories
+        )
+        binding.departmentSpinnerTeacherList.adapter = adapter
+    }
+
+    override fun showTeachers(teachers: java.util.ArrayList<String>) {
+        binding.teachersRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.teachersRecyclerView.adapter =
+            TeachersAdapter(teachers){
+                openWebPage()
+            }
+    }
+
+    private fun openWebPage(){
+        val departments = ArrayList(listOf(*resources.getStringArray(R.array.Categories)))
+        val departmentsUrl = ArrayList(listOf(*resources.getStringArray(R.array.urls)))
+        val departmentIndex = departments.indexOfFirst { it == binding.departmentSpinnerTeacherList.selectedItem.toString() }
+
+        if (departmentIndex >= 0 && departmentIndex < departmentsUrl.size){
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(departmentsUrl[departmentIndex])
+            startActivity(intent)
+        }
     }
 }

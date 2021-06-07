@@ -9,10 +9,14 @@ import com.example.ratemyteacher.mvp.BaseView
  */
 class TeachersListContract {
     interface View : BaseView {
+        fun showDepartments(categories: ArrayList<String>)
 
+        fun showTeachers(teachers: java.util.ArrayList<String>)
     }
 
     abstract class Presenter(view: View?) : BasePresenter<View>(view) {
+        abstract fun getDepartments()
 
+        abstract fun getTeachers(department: String)
     }
 }

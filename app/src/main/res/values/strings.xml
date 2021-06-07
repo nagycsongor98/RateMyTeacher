@@ -10,6 +10,13 @@
         <item>Horticultural engineering</item>
     </string-array>
 
+    <string-array name="urls">
+        <item>https://ms.sapientia.ro/en/departments/department-of-mathematics-informatics</item>
+        <item>https://ms.sapientia.ro/en/departments/department-of-applied-linguistics</item>
+        <item>https://ms.sapientia.ro/en/departments/department-of-mechanical-engineering</item>
+        <item>https://ms.sapientia.ro/en/departments/department-of-horticulture</item>
+    </string-array>
+
     <string-array name="Teachers">
         <item>1</item>
         <item>2</item>
